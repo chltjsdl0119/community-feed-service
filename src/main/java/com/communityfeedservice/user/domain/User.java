@@ -1,18 +1,20 @@
 package com.communityfeedservice.user.domain;
 
+import com.communityfeedservice.common.domain.PositiveIntegerCounter;
+
 import java.util.Objects;
 
 public class User {
     private final Long id;
     private final UserInfo userInfo;
-    private final UserRelationCounter followingCount;
-    private final UserRelationCounter followerCount;
+    private final PositiveIntegerCounter followingCounter;
+    private final PositiveIntegerCounter followerCounter;
 
     public User(Long id, UserInfo userInfo) {
         this.id = id;
         this.userInfo = userInfo;
-        this.followingCount = new UserRelationCounter();
-        this.followerCount = new UserRelationCounter();
+        this.followingCounter = new PositiveIntegerCounter();
+        this.followerCounter = new PositiveIntegerCounter();
     }
 
     public void follow(User targetUser) {
@@ -20,7 +22,7 @@ public class User {
             throw new IllegalArgumentException();
         }
 
-        followingCount.increase();
+        followingCounter.increase();
         targetUser.increaseFollowerCount();
     }
 
@@ -29,16 +31,16 @@ public class User {
             throw new IllegalArgumentException();
         }
 
-        followingCount.decrease();
+        followingCounter.decrease();
         targetUser.decreaseFollowerCount();
     }
 
     private void increaseFollowerCount() {
-        followerCount.increase();
+        followerCounter.increase();
     }
 
     private void decreaseFollowerCount() {
-        followerCount.decrease();
+        followerCounter.decrease();
     }
 
     @Override
