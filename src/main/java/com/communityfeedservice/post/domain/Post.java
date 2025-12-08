@@ -9,6 +9,7 @@ public class Post {
     private final User author;
     private final PostContent content;
     private final PositiveIntegerCounter likeCounter;
+    private PostPublicationState state;
 
     public Post(Long id, User author, PostContent content) {
         if (author == null) {
@@ -19,6 +20,7 @@ public class Post {
         this.author = author;
         this.content = content;
         this.likeCounter = new PositiveIntegerCounter();
+        this.state = PostPublicationState.PUBLIC;
     }
 
     public void like(User user) {
@@ -31,5 +33,14 @@ public class Post {
 
     public void unlike(User user) {
         this.likeCounter.decrease();
+    }
+
+    public void updatePost(User user, String updateContent, PostPublicationState state) {
+        if (!this.author.equals(user)) {
+            throw new IllegalArgumentException();
+        }
+
+        this.state = state;
+        this.content.updateContent(updateContent);
     }
 }
